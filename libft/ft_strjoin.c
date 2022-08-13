@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 02:28:07 by amaarouf          #+#    #+#             */
-/*   Updated: 2021/12/11 02:28:08 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/13 19:04:38 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,23 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*ptr_result;
-	size_t	len_s1;
-	size_t	len_s2;
+	char		*ptr_result;
+	size_t		len_s1;
+	size_t		len_s2;
+	int			i;
 
+	i = 0;
 	if (!s1 || !s2)
 		return (NULL);
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
-	ptr_result = (char *)malloc(len_s1 + len_s2 + 1);
+	ptr_result = ft_alloc(len_s1 + len_s2 + 1);
 	if (!ptr_result)
 		return (NULL);
-	ft_strlcpy(ptr_result, s1, len_s1 + 1);
-	ft_strlcat(ptr_result, s2, len_s1 + len_s2 + 1);
+	while (*s1)
+		ptr_result[i++] = *s1++;
+	while (*s2)
+		ptr_result[i++] = *s2++;
+	ptr_result[i] = '\0';
 	return (ptr_result);
 }

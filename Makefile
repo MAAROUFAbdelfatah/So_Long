@@ -13,6 +13,7 @@ HEADER := so_long.h
 GCC_FLAGS := -Wall -Wextra -Werror
 
 
+
 all: $(NAME)
 
 $(NAME): $(OFILES)

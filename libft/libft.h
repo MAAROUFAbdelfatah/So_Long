@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 03:36:33 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/12 18:10:20 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/13 19:04:27 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
+
+#define BUFFER_SIZE 42
 
 typedef struct Arg
 {
@@ -65,4 +67,7 @@ void	ft_putstr(char *s, t_args *arg);
 void	ft_putp(unsigned long x, t_args *arg);
 void	ft_type(const char c, t_args *arg);
 int		ft_printf(const char *format, ...);
+char	*ft_alloc(int size);
+int		new_line_exist(char *buffer, int size);
+char	*get_next_line(int fd);
 #endif

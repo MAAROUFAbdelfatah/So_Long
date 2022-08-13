@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 02:16:47 by amaarouf          #+#    #+#             */
-/*   Updated: 2021/12/11 19:11:56 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/13 19:14:12 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ size_t	ft_strlen(const char *s)
 	size_t	i;
 
 	i = 0;
-	while (s[i])
-		i++;
+	if (s != NULL)
+		while (s[i])
+			i++;
 	return (i);
 }
