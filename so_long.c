@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:31:29 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/13 21:38:37 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/14 16:25:44 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,17 @@ int    counter(t_game *game, char c)
 {
     if (c == 'P')
     {
-        game->p_counter++;
+        game->player->p_counter++;
         return (1);
     }
     else if (c == 'C')
     {
-        game->c_counter++;
+        game->collectibles->c_counter++;
         return (1);
     }
     else if (c == 'E')
     {
-        game->e_counter++;  
+        game->exits->e_counter++;  
         return (1);
     }
     return (0);
@@ -72,7 +72,6 @@ void    line_checker(t_game *game)
     }
 }
 
-
 char	*get_line_no_nl(int fd)
 {
 	char	*line;
@@ -89,27 +88,44 @@ void	ft_realloc(t_game *game)
 {
 	char	**holder;
 	int		i;
-	int		j;
 
-	i = 0;
-	j = 0;
-	holder = game->map->map; 
-	game->map->map = (char**) malloc(sizeof(char*) * game->map->nbr_lines);
+    holder = game->map->array_map; 
+	game->map->array_map = (char**) malloc((sizeof(char*) * (game->map->height + 2)));
 	
+    i = 0;
 	while(holder[i])
 	{
-		game->map->map[i] = holder[i];
+		game->map->array_map[i] = holder[i];
 		i++;
 	}
-	game->map->map[i] = ;
-	ft_printf("|amaarouf|");
-	// i = 0;
-	// while(game->map->map[i])
-	// {
-	// 	ft_printf("map: %s", *game->map->map[i]);
-	// 	i++;	
-	// }
-	
+    free(holder);
+	game->map->array_map[i] = game->map->line;
+    game->map->array_map[i+1] = NULL;
+}
+
+void    check_walls(t_game *game)
+{
+    int     i;
+	int		j;
+
+    i = 0;
+    while (game->map->array_map[i])
+    {
+		j = 0;
+		if(i == 0 || i == game->map->height - 1)
+		{
+			while (game->map->array_map[i][j])
+			{
+				if (game->map->array_map[i][j] != '1')
+					ft_error("check the map, wall");
+				j++;
+			}
+		}
+		else
+			if (game->map->array_map[i][game->map->width - 1] != '1' || game->map->array_map[i][0] != '1')
+				ft_error("check the map, wall"); 
+		i++;
+    }
 }
 
 void	map_checker(t_game *game)
@@ -118,10 +134,11 @@ void	map_checker(t_game *game)
 	
 	game->map->line = get_line_no_nl(game->map->fd_map);
 	len_holder = ft_strlen(game->map->line);
+    game->map->array_map[0] = ft_strdup(game->map->line);
+    game->map->array_map[1] = NULL;
     while (game->map->line)
     {	
-		game->map->nbr_lines++;
-		ft_realloc(game);
+		game->map->height++;
         game->map->width = ft_strlen(game->map->line);
         if (len_holder != game->map->width)
             ft_error("check the map, rectangular");
@@ -129,9 +146,11 @@ void	map_checker(t_game *game)
     	game->map->line = get_line_no_nl(game->map->fd_map);
 		if (!game->map->line)
 			break;
+		ft_realloc(game);
     }
-	if (game->p_counter != 1 || game->e_counter < 1 || game->c_counter < 1)
+	if (game->player->p_counter != 1 || game->exits->e_counter < 1 || game->collectibles->c_counter < 1)
 			ft_error("check the map, P, C or E");
+	check_walls(game);
 }
 
 t_map   *map_initializer(char *path)
@@ -139,24 +158,55 @@ t_map   *map_initializer(char *path)
     t_map   *map;
     
     map = (t_map*) malloc(sizeof(t_map));
-	map->map = (char**) malloc(sizeof(char*)*1);
+	map->array_map = (char**) malloc(sizeof(char*)*2);
     map->fd_map = open(path, O_RDONLY);
     map->height = 0;
     map->width = 0;
-	map->nbr_lines = 1;
     return (map);
 }
 
-t_game  *game_initializer(t_map *map)
+t_player	*player_initializer()
 {
-    t_game  *game;
-    
+	t_player	*player;
+	
+	player = (t_player*) malloc(sizeof(t_player));
+	player->p_counter = 0;
+	player->image = "images/rabbit.xpm";
+	return (player);
+}
+
+t_collectibles	*collectibles_initializer()
+{
+	t_collectibles	*collectibles;
+
+	collectibles = (t_collectibles*) malloc(sizeof(t_collectibles));
+	collectibles->c_counter = 0;
+	collectibles->image = "images/carrot.xpm";
+	return	(collectibles);
+}
+
+t_exits	*exits_initializer()
+{
+	t_exits	*exits;
+
+	exits = (t_exits*) malloc(sizeof(t_exits));
+	exits->e_counter = 0;
+	exits->image01 = "close_door.xpm";
+	exits->image02 = "open_door.xmp";
+	return (exits);
+}
+
+t_game  *game_initializer(char *path)
+{
+    t_game			*game;
+	
     game = (t_game*) malloc(sizeof(t_game));
-    game->c_counter = 0;
-    game->e_counter = 0;
-    game->p_counter = 0;
-    game->map = map;
-    return game;
+   
+	game->collectibles = collectibles_initializer();
+	game->exits = exits_initializer();
+	game->player = player_initializer();
+    game->map = map_initializer(path);
+    return (game);
 }
 
 int main(int argc, char **argv)
@@ -164,7 +214,6 @@ int main(int argc, char **argv)
     char    **path;
     char    *extension;
     t_game  *game;
-    t_map   *map;
 
     if (argc != 2)
         ft_error("check the number of args");
@@ -172,8 +221,16 @@ int main(int argc, char **argv)
     extension = path[(ft_strlen_2d(path) - 1)];
     if (ft_strncmp(extension, "ber", 3))
         ft_error("check file extension");
-    map = map_initializer(argv[1]);
-    game = game_initializer(map);
+    game = game_initializer(argv[1]);
     map_checker(game);
+    int     i;
+    
+    i = 0;
+    while (game->map->array_map[i])
+    {
+        ft_printf("%s\n", game->map->array_map[i]);
+        i++;
+    }
+    
     return (0);
 }
