@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:31:29 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/14 16:25:44 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/14 20:01:13 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,8 +191,8 @@ t_exits	*exits_initializer()
 
 	exits = (t_exits*) malloc(sizeof(t_exits));
 	exits->e_counter = 0;
-	exits->image01 = "close_door.xpm";
-	exits->image02 = "open_door.xmp";
+	exits->image01 = "images/close_door.xpm";
+	exits->image02 = "images/open_door.xmp";
 	return (exits);
 }
 
@@ -206,14 +206,31 @@ t_game  *game_initializer(char *path)
 	game->exits = exits_initializer();
 	game->player = player_initializer();
     game->map = map_initializer(path);
+	game->img_ground = "images/ground.xpm";
+	game->img_wall = "images/wall.xpm";
     return (game);
 }
 
+// t_window	*window_initializer(t_game game)
+// {
+// 	t_window	*window;
+
+// 	window = (t_window*) malloc(sizeof(t_window));
+// 	window->mlx = mlx_init();
+// 	window->win_width = game.map->width * IMAGE_SIZE;
+// 	window->win_height = game.map->height * IMAGE_SIZE;
+// 	window->win_name = WIN_NAME;
+// 	window->win = mlx_new_window(window->mlx, window->win_width, window->win_height, window->win_name);
+// 	return (window);
+	
+// }
+
 int main(int argc, char **argv)
 {
-    char    **path;
-    char    *extension;
-    t_game  *game;
+    char		**path;
+    char		*extension;
+    t_game		*game;
+	// t_window	*window;
 
     if (argc != 2)
         ft_error("check the number of args");
@@ -222,6 +239,7 @@ int main(int argc, char **argv)
     if (ft_strncmp(extension, "ber", 3))
         ft_error("check file extension");
     game = game_initializer(argv[1]);
+	// window = window_initializer(*game);
     map_checker(game);
     int     i;
     
@@ -231,6 +249,7 @@ int main(int argc, char **argv)
         ft_printf("%s\n", game->map->array_map[i]);
         i++;
     }
-    
+    generate_map(*game);
+
     return (0);
 }

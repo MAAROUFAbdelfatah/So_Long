@@ -1,6 +1,6 @@
 NAME := so_long
 
-CFILES :=  so_long.c
+CFILES :=  so_long.c graphic.c
 
 OFILES := $(CFILES:%.c=%.o)
 
@@ -12,11 +12,13 @@ HEADER := so_long.h
 
 GCC_FLAGS := -Wall -Wextra -Werror
 
+MLX_FLAGS := -Lmlx -lmlx -framework OpenGL -framework AppKit
+
 all: $(NAME)
 
 $(NAME): $(OFILES)
 	$(MAKE) -C $(PATH_H)
-	gcc $(GCC_FLAGS) $^ -o $(NAME) $(LIBFT)
+	gcc $(GCC_FLAGS) $(MLX_FLAGS) $^ -o $(NAME) $(LIBFT)
 
 %.o : %.c $(HEADER)
 	gcc $(GCC_FLAGS) -c $< -o $@
