@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:28:17 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/14 20:00:23 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/15 15:29:34 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 
 #define IMAGE_SIZE 32
 #define WIN_NAME "So Long"
+#define KEY_A 0
+#define KEY_S 1
+#define KEY_D 2
+#define KEY_W 13
 
 typedef struct map
 {
@@ -27,12 +31,17 @@ typedef struct map
 	int		fd_map;
 	int		width;
 	int		height;
+	int		counter_x;
+	int		counter_y;
 }	t_map;
 
 typedef	struct player
 {
 	char	*image;
 	int		p_counter;
+	int		x_position;
+	int		y_position;
+	int		moves_counter;
 }	t_player;
 
 typedef	struct collectibles
@@ -64,6 +73,7 @@ typedef struct	window {
 	int		win_width;
 	int		win_height;
 	char	*win_name;
+	t_game	*game;
 }	t_window;
 
 size_t			ft_strlen_2d(char **s);
@@ -79,6 +89,7 @@ t_player		*player_initializer();
 t_collectibles	*collectibles_initializer();
 t_exits			*exits_initializer();
 t_game			*game_initializer(char *path);
+t_window		*window_initializer(t_game *game);
 void			put_image(t_window window,char *image, int x, int y);
-void			generate_map(t_game game);
+void			generate_map(t_game *game);
 #endif

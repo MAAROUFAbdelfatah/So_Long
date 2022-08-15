@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:31:29 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/14 20:01:13 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/15 19:31:30 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,8 @@ t_map   *map_initializer(char *path)
     map->fd_map = open(path, O_RDONLY);
     map->height = 0;
     map->width = 0;
+    map->counter_x = 0;
+    map->counter_x = 0;
     return (map);
 }
 
@@ -172,6 +174,7 @@ t_player	*player_initializer()
 	player = (t_player*) malloc(sizeof(t_player));
 	player->p_counter = 0;
 	player->image = "images/rabbit.xpm";
+    player->moves_counter = 0;
 	return (player);
 }
 
@@ -192,7 +195,7 @@ t_exits	*exits_initializer()
 	exits = (t_exits*) malloc(sizeof(t_exits));
 	exits->e_counter = 0;
 	exits->image01 = "images/close_door.xpm";
-	exits->image02 = "images/open_door.xmp";
+	exits->image02 = "images/open_door.xpm";
 	return (exits);
 }
 
@@ -211,26 +214,26 @@ t_game  *game_initializer(char *path)
     return (game);
 }
 
-// t_window	*window_initializer(t_game game)
-// {
-// 	t_window	*window;
+t_window	*window_initializer(t_game *game)
+{
+	t_window	*window;
 
-// 	window = (t_window*) malloc(sizeof(t_window));
-// 	window->mlx = mlx_init();
-// 	window->win_width = game.map->width * IMAGE_SIZE;
-// 	window->win_height = game.map->height * IMAGE_SIZE;
-// 	window->win_name = WIN_NAME;
-// 	window->win = mlx_new_window(window->mlx, window->win_width, window->win_height, window->win_name);
-// 	return (window);
+	window = (t_window*) malloc(sizeof(t_window));
+	window->mlx = mlx_init();
+	window->win_width = game->map->width * IMAGE_SIZE;
+	window->win_height = game->map->height * IMAGE_SIZE;
+	window->win_name = WIN_NAME;
+	window->win = mlx_new_window(window->mlx, window->win_width, window->win_height, window->win_name);
+    window->game = game;
+	return (window);
 	
-// }
+}
 
 int main(int argc, char **argv)
 {
     char		**path;
     char		*extension;
     t_game		*game;
-	// t_window	*window;
 
     if (argc != 2)
         ft_error("check the number of args");
@@ -239,17 +242,8 @@ int main(int argc, char **argv)
     if (ft_strncmp(extension, "ber", 3))
         ft_error("check file extension");
     game = game_initializer(argv[1]);
-	// window = window_initializer(*game);
     map_checker(game);
-    int     i;
-    
-    i = 0;
-    while (game->map->array_map[i])
-    {
-        ft_printf("%s\n", game->map->array_map[i]);
-        i++;
-    }
-    generate_map(*game);
+    generate_map(game);
 
     return (0);
 }
