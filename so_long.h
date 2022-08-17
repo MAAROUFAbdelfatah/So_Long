@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:28:17 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/15 15:29:34 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/17 21:45:18 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #define KEY_S 1
 #define KEY_D 2
 #define KEY_W 13
+#define KEY_ESC 53
 
 typedef struct map
 {
@@ -92,4 +93,6 @@ t_game			*game_initializer(char *path);
 t_window		*window_initializer(t_game *game);
 void			put_image(t_window window,char *image, int x, int y);
 void			generate_map(t_game *game);
+void			ft_free_tab(char **tab);
+void			free_all(t_game *game);
 #endif

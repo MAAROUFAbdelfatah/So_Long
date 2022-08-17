@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:31:29 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/15 19:31:30 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/17 21:54:41 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void    ft_error(char *s)
 {
-    ft_printf("Error: %s", s);
+    ft_printf("Error\n %s", s);
     exit(0);
 }
 
@@ -103,6 +103,17 @@ void	ft_realloc(t_game *game)
     game->map->array_map[i+1] = NULL;
 }
 
+void free_all(t_game *game)
+{
+    ft_free_tab(game->map->array_map);
+    free(game->collectibles);
+    free(game->exits);
+    free(game->player);
+    free(game->map);
+    free(game);
+    
+}
+
 void    check_walls(t_game *game)
 {
     int     i;
@@ -117,13 +128,19 @@ void    check_walls(t_game *game)
 			while (game->map->array_map[i][j])
 			{
 				if (game->map->array_map[i][j] != '1')
+                {
 					ft_error("check the map, wall");
+                    free_all(game);
+                }
 				j++;
 			}
 		}
 		else
 			if (game->map->array_map[i][game->map->width - 1] != '1' || game->map->array_map[i][0] != '1')
+            {
+                free_all(game);
 				ft_error("check the map, wall"); 
+            }
 		i++;
     }
 }
@@ -141,15 +158,21 @@ void	map_checker(t_game *game)
 		game->map->height++;
         game->map->width = ft_strlen(game->map->line);
         if (len_holder != game->map->width)
+        {
+            free_all(game);
             ft_error("check the map, rectangular");
+        }
         line_checker(game);
     	game->map->line = get_line_no_nl(game->map->fd_map);
 		if (!game->map->line)
 			break;
 		ft_realloc(game);
     }
-	if (game->player->p_counter != 1 || game->exits->e_counter < 1 || game->collectibles->c_counter < 1)
-			ft_error("check the map, P, C or E");
+	if (game->player->p_counter != 1 || game->exits->e_counter != 1 || game->collectibles->c_counter < 1)
+    {   
+        free_all(game);
+		ft_error("check the map, P, C or E");
+    }
 	check_walls(game);
 }
 
@@ -173,7 +196,7 @@ t_player	*player_initializer()
 	
 	player = (t_player*) malloc(sizeof(t_player));
 	player->p_counter = 0;
-	player->image = "images/rabbit.xpm";
+	player->image = "images/rabbit.xpm"; 
     player->moves_counter = 0;
 	return (player);
 }
@@ -240,10 +263,17 @@ int main(int argc, char **argv)
     path = ft_split(argv[1], '.');
     extension = path[(ft_strlen_2d(path) - 1)];
     if (ft_strncmp(extension, "ber", 3))
+    {
+        free(path);
+        free(extension);
         ft_error("check file extension");
+    }
     game = game_initializer(argv[1]);
     map_checker(game);
     generate_map(game);
+
+    while (1);
+    
 
     return (0);
 }
