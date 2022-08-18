@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:31:29 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/17 21:54:41 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/18 12:37:49 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,7 @@ void    line_checker(t_game *game)
             i++;
         else
         {
-            free(s);
-            free(game->map);
-            free(game);
-            ft_error("check the map, 0, 1, C, P or E");
+            free_all(game, NULL, "check the map, 0, 1, C, P or E");
         }
     }
 }
@@ -103,15 +100,24 @@ void	ft_realloc(t_game *game)
     game->map->array_map[i+1] = NULL;
 }
 
-void free_all(t_game *game)
+void free_all(t_game *game, t_window *window, char *error)
 {
+    
     ft_free_tab(game->map->array_map);
     free(game->collectibles);
     free(game->exits);
     free(game->player);
     free(game->map);
     free(game);
-    
+    if (window)
+    {
+        free(window->win);
+	    free(window->mlx);
+	    free(window);
+        exit(0);
+    }
+    if (error)
+        ft_error(error);
 }
 
 void    check_walls(t_game *game)
@@ -128,19 +134,13 @@ void    check_walls(t_game *game)
 			while (game->map->array_map[i][j])
 			{
 				if (game->map->array_map[i][j] != '1')
-                {
-					ft_error("check the map, wall");
-                    free_all(game);
-                }
+                    free_all(game, NULL, "check the map, wall");
 				j++;
 			}
 		}
 		else
 			if (game->map->array_map[i][game->map->width - 1] != '1' || game->map->array_map[i][0] != '1')
-            {
-                free_all(game);
-				ft_error("check the map, wall"); 
-            }
+                free_all(game, NULL, "check the map, wall");
 		i++;
     }
 }
@@ -151,17 +151,14 @@ void	map_checker(t_game *game)
 	
 	game->map->line = get_line_no_nl(game->map->fd_map);
 	len_holder = ft_strlen(game->map->line);
-    game->map->array_map[0] = ft_strdup(game->map->line);
+    game->map->array_map[0] = game->map->line;
     game->map->array_map[1] = NULL;
     while (game->map->line)
-    {	
+    {
 		game->map->height++;
         game->map->width = ft_strlen(game->map->line);
         if (len_holder != game->map->width)
-        {
-            free_all(game);
-            ft_error("check the map, rectangular");
-        }
+            free_all(game, NULL, "check the map, rectangular");
         line_checker(game);
     	game->map->line = get_line_no_nl(game->map->fd_map);
 		if (!game->map->line)
@@ -169,10 +166,7 @@ void	map_checker(t_game *game)
 		ft_realloc(game);
     }
 	if (game->player->p_counter != 1 || game->exits->e_counter != 1 || game->collectibles->c_counter < 1)
-    {   
-        free_all(game);
-		ft_error("check the map, P, C or E");
-    }
+        free_all(game, NULL, "check the map, P, C or E");
 	check_walls(game);
 }
 
@@ -271,9 +265,5 @@ int main(int argc, char **argv)
     game = game_initializer(argv[1]);
     map_checker(game);
     generate_map(game);
-
-    while (1);
-    
-
     return (0);
 }

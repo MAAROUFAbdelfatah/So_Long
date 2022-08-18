@@ -6,19 +6,17 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 14:59:57 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/17 22:00:42 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/18 12:38:00 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include "stdio.h"
 
 void	put_image(t_window window,char *image, int x, int y)
 {
 	void    *img;
 	int     img_width;
     int     img_height;
-	
 	
 	img = mlx_xpm_file_to_image(window.mlx, image, &img_width, &img_height);
 	mlx_put_image_to_window(window.mlx, window.win, img, x, y);
@@ -51,13 +49,6 @@ void	window_render(t_window window, t_game *game)
 {
 	int		i;
 	int		j;
-    
-    i = 0;
-    while (game->map->array_map[i])
-    {
-        ft_printf("%s\n", game->map->array_map[i]);
-        i++;
-    }
 	
 	i = 0;
 	game->map->counter_y = 0;
@@ -102,12 +93,6 @@ void	ft_free_tab(char **tab)
 	free(tab);
 }
 
-void	free_win(t_window *window)
-{
-	free(window->win);
-	free(window->mlx);
-}
-
 int	envirenment_checker(t_window *window, int n_x_position, int n_y_position)
 {
 	if (window->game->map->array_map[n_y_position / IMAGE_SIZE][n_x_position / IMAGE_SIZE] == '0')
@@ -123,13 +108,10 @@ int	envirenment_checker(t_window *window, int n_x_position, int n_y_position)
 	}
 	else if (window->game->map->array_map[n_y_position / IMAGE_SIZE][n_x_position / IMAGE_SIZE] == 'E')
 	{
-
 		if (window->game->collectibles->c_counter == 0)
 		{
 			replacement(window->game,n_y_position / IMAGE_SIZE , n_x_position / IMAGE_SIZE);
-			free_all(window->game);
-			free_win(window);
-			exit (0);
+			free_all(window->game, window, NULL);
 		}
 	}
 	return (0);
@@ -147,7 +129,7 @@ void	clear_and_render(t_window *window, int x, int y)
 int	action(int keycode,t_window *window)
 {	
 	if (keycode == KEY_ESC)
-		exit(1);
+		free_all(window->game, window, NULL);
 	else if (keycode == KEY_A)
 		clear_and_render(window, window->game->player->x_position - IMAGE_SIZE, window->game->player->y_position);	
 	else if (keycode == KEY_S)
@@ -161,9 +143,7 @@ int	action(int keycode,t_window *window)
 
 int close_win()
 {
-
 	exit(EXIT_SUCCESS);
-	return (0);
 }
 
 void    generate_map(t_game *game)

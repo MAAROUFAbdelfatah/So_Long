@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:28:17 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/17 21:45:18 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/18 12:43:48 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,13 @@ typedef struct	window {
 	t_game	*game;
 }	t_window;
 
-size_t			ft_strlen_2d(char **s);
 void			ft_error(char *s);
+size_t			ft_strlen_2d(char **s);
 int				counter(t_game *game, char c);
 void			line_checker(t_game *game);
 char			*get_line_no_nl(int fd);
 void			ft_realloc(t_game *game);
+void 			free_all(t_game *game, t_window *window, char *error);
 void			check_walls(t_game *game);
 void			map_checker(t_game *game);
 t_map			*map_initializer(char *path);
@@ -92,7 +93,13 @@ t_exits			*exits_initializer();
 t_game			*game_initializer(char *path);
 t_window		*window_initializer(t_game *game);
 void			put_image(t_window window,char *image, int x, int y);
-void			generate_map(t_game *game);
+void			char_checker(t_window window, t_game *game, char c);
+void			window_render(t_window window, t_game *game);
+void			replacement(t_game *game, int x, int y);
 void			ft_free_tab(char **tab);
-void			free_all(t_game *game);
+int				envirenment_checker(t_window *window, int n_x_position, int n_y_position);
+void			clear_and_render(t_window *window, int x, int y);
+int				action(int keycode,t_window *window);
+int 			close_win();
+void			generate_map(t_game *game);
 #endif
