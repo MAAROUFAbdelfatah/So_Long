@@ -6,24 +6,24 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:28:17 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/18 12:43:48 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/18 15:42:46 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# ifndef SO_LONG_H
+#ifndef SO_LONG_H
 # define SO_LONG_H
 
-#include "libft/libft.h"
-#include "mlx.h"
-#include <fcntl.h>
+# include "libft/libft.h"
+# include "mlx.h"
+# include <fcntl.h>
 
-#define IMAGE_SIZE 32
-#define WIN_NAME "So Long"
-#define KEY_A 0
-#define KEY_S 1
-#define KEY_D 2
-#define KEY_W 13
-#define KEY_ESC 53
+# define IMAGE_SIZE 32
+# define WIN_NAME "So Long"
+# define KEY_A 0
+# define KEY_S 1
+# define KEY_D 2
+# define KEY_W 13
+# define KEY_ESC 53
 
 typedef struct map
 {
@@ -36,7 +36,7 @@ typedef struct map
 	int		counter_y;
 }	t_map;
 
-typedef	struct player
+typedef struct player
 {
 	char	*image;
 	int		p_counter;
@@ -45,7 +45,7 @@ typedef	struct player
 	int		moves_counter;
 }	t_player;
 
-typedef	struct collectibles
+typedef struct collectibles
 {
 	char	*image;
 	int		c_counter;
@@ -60,15 +60,15 @@ typedef struct exits
 
 typedef struct game
 {
-	t_player 		*player;
-	t_collectibles 	*collectibles;
+	t_player		*player;
+	t_collectibles	*col;
 	t_exits			*exits;	
 	t_map			*map;
 	char			*img_ground;
 	char			*img_wall;
-}   t_game;
+}	t_game;
 
-typedef struct	window {
+typedef struct window {
 	void	*mlx;
 	void	*win;
 	int		win_width;
@@ -77,29 +77,28 @@ typedef struct	window {
 	t_game	*game;
 }	t_window;
 
-void			ft_error(char *s);
 size_t			ft_strlen_2d(char **s);
 int				counter(t_game *game, char c);
 void			line_checker(t_game *game);
 char			*get_line_no_nl(int fd);
 void			ft_realloc(t_game *game);
-void 			free_all(t_game *game, t_window *window, char *error);
+void			free_all(t_game *game, t_window *window, char *error);
 void			check_walls(t_game *game);
 void			map_checker(t_game *game);
 t_map			*map_initializer(char *path);
-t_player		*player_initializer();
-t_collectibles	*collectibles_initializer();
-t_exits			*exits_initializer();
+t_player		*player_initializer(void);
+t_collectibles	*collectibles_initializer(void);
+t_exits			*exits_initializer(void);
 t_game			*game_initializer(char *path);
 t_window		*window_initializer(t_game *game);
-void			put_image(t_window window,char *image, int x, int y);
+void			put_image(t_window window, char *image, int x, int y);
 void			char_checker(t_window window, t_game *game, char c);
 void			window_render(t_window window, t_game *game);
 void			replacement(t_game *game, int x, int y);
 void			ft_free_tab(char **tab);
-int				envirenment_checker(t_window *window, int n_x_position, int n_y_position);
+int				envirenment_checker(t_window *window, int n_x, int n_y);
 void			clear_and_render(t_window *window, int x, int y);
-int				action(int keycode,t_window *window);
-int 			close_win();
+int				action(int keycode, t_window *window);
+int				close_win(void);
 void			generate_map(t_game *game);
 #endif

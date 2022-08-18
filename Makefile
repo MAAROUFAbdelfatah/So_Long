@@ -1,6 +1,6 @@
 NAME := so_long
 
-CFILES :=  so_long.c graphic.c
+CFILES :=  so_long.c graphic.c initializers.c checkers.c tools.c
 
 OFILES := $(CFILES:%.c=%.o)
 

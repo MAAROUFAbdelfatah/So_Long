@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 03:36:33 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/13 19:04:27 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/18 15:44:23 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 # include <stdarg.h>
 
-#define BUFFER_SIZE 42
+# define BUFFER_SIZE 42
 
 typedef struct Arg
 {
