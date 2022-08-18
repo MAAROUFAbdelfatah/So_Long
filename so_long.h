@@ -6,7 +6,7 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 18:28:17 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/18 15:42:46 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/18 18:40:18 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void			ft_realloc(t_game *game);
 void			free_all(t_game *game, t_window *window, char *error);
 void			check_walls(t_game *game);
 void			map_checker(t_game *game);
-t_map			*map_initializer(char *path);
+t_map			*map_initializer(t_game *game, char *path);
 t_player		*player_initializer(void);
 t_collectibles	*collectibles_initializer(void);
 t_exits			*exits_initializer(void);

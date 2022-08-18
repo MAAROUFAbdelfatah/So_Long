@@ -12,7 +12,8 @@ HEADER := so_long.h
 
 GCC_FLAGS := -Wall -Wextra -Werror
 
-MLX_FLAGS := -Lmlx -lmlx -framework OpenGL -framework AppKit
+MLX_FLAGS := -lmlx -framework OpenGL -framework AppKit
+
 
 all: $(NAME)
 
@@ -29,6 +30,6 @@ clean:
 
 fclean: clean
 	$(MAKE) -C $(PATH_H) fclean
-	rm -f $(NAME)
+	rm -rf $(NAME);
 
 re: fclean all

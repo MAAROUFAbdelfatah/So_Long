@@ -6,19 +6,26 @@
 /*   By: amaarouf <amaarouf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/18 13:42:07 by amaarouf          #+#    #+#             */
-/*   Updated: 2022/08/18 15:41:32 by amaarouf         ###   ########.fr       */
+/*   Updated: 2022/08/18 18:40:01 by amaarouf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-t_map	*map_initializer(char *path)
+t_map	*map_initializer(t_game *game, char *path)
 {
 	t_map	*map;
 
 	map = (t_map *) malloc(sizeof(t_map));
-	map->array_map = (char **) malloc(sizeof(char *) * 2);
 	map->fd_map = open(path, O_RDONLY);
+	if (map->fd_map < 0)
+	{
+		free(map);
+		free(game);
+		ft_printf("check the file path.");
+		exit(0);
+	}
+	map->array_map = (char **) malloc(sizeof(char *) * 2);
 	map->height = 0;
 	map->width = 0;
 	map->counter_x = 0;
@@ -63,10 +70,10 @@ t_game	*game_initializer(char *path)
 	t_game	*game;
 
 	game = (t_game *) malloc(sizeof(t_game));
+	game->map = map_initializer(game, path);
 	game->col = collectibles_initializer();
 	game->exits = exits_initializer();
 	game->player = player_initializer();
-	game->map = map_initializer(path);
 	game->img_ground = "images/ground.xpm";
 	game->img_wall = "images/wall.xpm";
 	return (game);
